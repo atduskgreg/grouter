@@ -25,16 +25,31 @@
       }
     }
   
-    var Router = {
-        compiledRoutes : [],
-        addRoute : function(route, action){
-          
-        //           
+  
+          //           
         // var routeParts = window.location.hash.split("/");
         // // remove the '#'
         // routeParts.reverse() && routeParts.pop() && routeParts.reverse();
         //   routes[route] = {}
         //   
+        
+    var Router = {
+        compiledRoutes : [],
+        
+        route : function(){
+          var routableHash = window.location.hash.replace(/^#/, '');
+          
+          for (n = 0; n < Router.compiledRoutes.length; n ++){
+            if(splat = Router.compiledRoutes[n].route.doesMatch(routableHash)){
+              Router.compiledRoutes[n].action(splat);
+            }
+          }
+        },
+        
+        addRoute : function(route, action){
+          var patterns = Router.extractPatterns(route);
+          var compiled = Router.compileRoute(patterns);
+          Router.compiledRoutes.push({action: action, route: compiled});
         },
         
         compileRoute : function(patterns){
@@ -65,20 +80,22 @@
           return urlParts
         }
       }
+      
+    var Route = function(myRoute, action){
+      Router.addRoute(myRoute, action);
+    }
+    Route("/posts/:id", function(params){
+      $("h1").html("Post #" + params['id']);  
+    })
     $(function() {
-      $("h1").html('hi');
+      Router.route();
       
       
-      
-      var Route = function(myRoute, action){
-        Router.addRoute({myRoute : action});
-      }
-      // Route("/posts/:id", function(){});
-      // Route("/say/*/to/*", function(){})
-      
-      Route(["/posts/:id"], function(params){
-        
-      })
+
+      // // Route("/posts/:id", function(){});
+      // // no splats Route("/say/*/to/*", function(){})
+      // 
+
     })
   </script>
   <body>
