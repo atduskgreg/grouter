@@ -2,7 +2,86 @@
 <html>
   <head>
     <title>Tumblmathing</title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"></script>
   </head>
+  <script type="text/javascript">
+    var CompiledRoute = function(regex, captures){
+      this.regex = regex;
+      this.captures = captures;
+      
+      var thisRoute = this;
+      
+      this.doesMatch = function(request){
+        if(m = request.match(thisRoute.regex)){
+          var splats = {};
+          for (i = 1; i < m.length; i ++){
+            splats[captures[i-1]] = m[i];
+          }
+          return splats;
+        }
+        else{
+          return false;
+        }
+      }
+    }
+  
+    var Router = {
+        compiledRoutes : [],
+        addRoute : function(route, action){
+          
+        //           
+        // var routeParts = window.location.hash.split("/");
+        // // remove the '#'
+        // routeParts.reverse() && routeParts.pop() && routeParts.reverse();
+        //   routes[route] = {}
+        //   
+        },
+        
+        compileRoute : function(patterns){
+          var regexString = "^";
+          var wildCardNames = [];
+          for (i = 0; i < patterns.length; i ++){
+            regexString += "\/" + patterns[i].pattern;
+            
+            if(patterns[i].wildcard)
+              wildCardNames.push(patterns[i].name);
+          }
+          var r = new RegExp(regexString);
+          return new CompiledRoute(r, wildCardNames);
+        },
+        
+        extractPatterns : function(route){
+          var parts = route.split("/")
+
+          var urlParts = []
+          
+          for (i = 1; i < parts.length; i ++){
+            if(m = parts[i].match(/:([a-z]*|[0-9]*)/))
+              urlParts.push({wildcard : true, name : m[1], pattern : "([a-z]+|[0-9]+)"});
+            else
+              urlParts.push({wildcard : false, pattern : parts[i]});
+          }
+          
+          return urlParts
+        }
+      }
+    $(function() {
+      $("h1").html('hi');
+      
+      
+      
+      var Route = function(myRoute, action){
+        Router.addRoute({myRoute : action});
+      }
+      // Route("/posts/:id", function(){});
+      // Route("/say/*/to/*", function(){})
+      
+      Route(["/posts/:id"], function(params){
+        
+      })
+    })
+  </script>
   <body>
+    <h1></h1>
   </body>
 </html>
