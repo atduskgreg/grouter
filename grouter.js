@@ -30,6 +30,11 @@ var Router = {
         }
       }
     },
+        
+    goTo : function(path){
+      window.location.hash = path;
+      Router.route();
+    },
     
     addRoute : function(route, action){
       var patterns = Router.extractPatterns(route);
