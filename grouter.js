@@ -52,6 +52,7 @@ var Router = {
         if(patterns[i].wildcard)
           wildCardNames.push(patterns[i].name);
       }
+      regexString += "$";
       var r = new RegExp(regexString);
       return new CompiledRoute(r, wildCardNames);
     },
@@ -63,7 +64,7 @@ var Router = {
       
       for (i = 1; i < parts.length; i ++){
         if(m = parts[i].match(/:([a-z]*|[0-9]*)/))
-          urlParts.push({wildcard : true, name : m[1], pattern : "([a-z]+|[0-9]+)"});
+          urlParts.push({wildcard : true, name : m[1], pattern : "([^\/]*)"});
         else
           urlParts.push({wildcard : false, pattern : parts[i]});
       }
