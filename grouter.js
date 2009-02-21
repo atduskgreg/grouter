@@ -24,9 +24,10 @@ var Router = {
     route : function(){
       var routableHash = window.location.hash.replace(/^#/, '');
       
-      for (n = 0; n < Router.compiledRoutes.length; n ++){
+      for (var n = 0; n < Router.compiledRoutes.length; n ++){
         if(splat = Router.compiledRoutes[n].route.doesMatch(routableHash)){
           Router.compiledRoutes[n].action(splat);
+          break;
         }
       }
     },
@@ -73,4 +74,5 @@ var Router = {
   
 var Route = function(myRoute, action){
   Router.addRoute(myRoute, action);
+  return false;
 }
